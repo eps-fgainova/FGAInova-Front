@@ -15,6 +15,7 @@ import {
   useBreakpointValue,
   useDisclosure,
   Container,
+  Image,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -23,6 +24,7 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 import { Link as LinkRouter } from "react-router-dom";
+import Logo from "../../assets/logoFga-03.svg";
 
 export default function Header() {
   const { isOpen, onToggle } = useDisclosure();
@@ -67,12 +69,12 @@ export default function Header() {
               fontFamily={"heading"}
               color={useColorModeValue("gray.800", "white")}
             >
-              <LinkRouter to={"/"}>
-              Logo
+              <LinkRouter to={"/"}>                
+                <Image boxSize='60px' src={Logo} alt='Logo FGA Inova' />
               </LinkRouter>
             </Text>
 
-            <Flex display={{ base: "none", md: "flex" }} ml={10}>
+            <Flex display={{ base: "none", md: "flex"}} alignItems="center" ml={10}>
               <DesktopNav />
             </Flex>
           </Flex>
@@ -282,7 +284,7 @@ interface NavItem {
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "PROJETOS",
-    href: "/projetos"
+    href: "/projetos",
     // children: [
     //   {
     //     label: "Explore Design Work",
@@ -298,6 +300,7 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "SOBRE",
+    href: "/sobre",
     // children: [
     //   {
     //     label: "Job Board",
@@ -313,7 +316,7 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "NEWSLETTER",
-    href: "#",
+    href: "/newsletter",
   },
   // {
   //   label: "Hire Designers",
