@@ -8,11 +8,12 @@ import {
   Input,
   Button,
   SimpleGrid,
+  Flex,
 } from "@chakra-ui/react";
 
 export default function Login() {
   return (
-    <Box position={"relative"} height={"87vh"}>
+    <Flex minH={"100vh"} align={"center"} justify={"center"} py={12}>
       <Container
         as={SimpleGrid}
         maxW={"7xl"}
@@ -149,6 +150,6 @@ export default function Login() {
           form
         </Stack>
       </Container>
-    </Box>
+    </Flex>
   );
 }
