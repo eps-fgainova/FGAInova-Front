@@ -5,6 +5,9 @@ import { Home } from "../pages/Home";
 import Cadastro from "../pages/Cadastro";
 import Login from "../pages/Login";
 import Projetos from "../pages/Projetos";
+import Newsletter from "../pages/Newsletter";
+import NotFound from "../pages/NotFound";
+import Sobre from "../pages/Sobre";
 
 export const RoutesMain = () => {
   // const { user } = useAuth();
@@ -42,7 +45,8 @@ export const RoutesMain = () => {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/login" element={<Login/>} />        
         <Route path="/projetos" element={<Projetos/>} />        
-        <Route path="/hello" element={<h1>Hello Word 👻</h1>} />        
+        <Route path="/sobre" element={<Sobre/>} />        
+        <Route path="/newsletter" element={<Newsletter/>} />        
         {/* {listaPedidosRoutes()} */}
         {/* <Route
           path="/perfil"
@@ -52,7 +56,7 @@ export const RoutesMain = () => {
             </ProtectedLayout>
           }
         /> */}        
-        <Route path="*" element={<h1>Pagina Não Encontrada</h1>} />
+        <Route path="*" element={<NotFound/>} />
       </Routes>
       <Footer />
     </Router>

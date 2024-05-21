@@ -41,7 +41,12 @@ const avatars = [
 
 export default function Cadastro() {
   return (
-    <Box position={'relative'} height={"87vh"}>
+    <Flex
+        minH={'100vh'}
+        align={'center'}
+        justify={'center'}
+        py={12}        
+        >
       <Container
         as={SimpleGrid}
         maxW={'7xl'}
@@ -189,7 +194,7 @@ export default function Cadastro() {
           form
         </Stack>
       </Container>     
-    </Box>
+    </Flex>
   );
 }
 
