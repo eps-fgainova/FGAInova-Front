@@ -1,15 +1,48 @@
 /* eslint-disable no-undef */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-const AuthContext = createContext({});
+// Defina a interface AuthContextType
+interface User {
+  id?: string;
+  name?: string;
+  // Outros campos do usuário, conforme necessário
+}
 
+interface Order {
+  combo: string[];
+  sanduiche: string[];
+  bebida: string[];
+  acompanhamento: string[];
+  sobremesa: string[];
+  cupom: string;
+  valorTotal: number;
+  clienteId: string;
+  entregador: string;
+  retiradaLocal: boolean;
+}
+
+interface AuthContextType {
+  isAuthenticate: boolean;
+  setIsAuthenticate: React.Dispatch<React.SetStateAction<boolean>>;
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+  token: string | undefined;
+  preOrder: unknown[]; // Ajuste o tipo conforme necessário
+  setPreOrder: React.Dispatch<React.SetStateAction<unknown[]>>;
+  order: Order;
+  setOrder: React.Dispatch<React.SetStateAction<Order>>;
+  logOut: () => void;
+}
+
+// Inicialize o contexto com um valor vazio e tipado corretamente
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticate, setIsAuthenticate] = useState(false);
-  const [user, setUser] = useState({});
-  const [token, setToken] = useState();
-  const [preOrder, setPreOrder] = useState([]);
-  const [order, setOrder] = useState({
+  const [isAuthenticate, setIsAuthenticate] = useState<boolean>(false);
+  const [user, setUser] = useState<User>({});
+  const [token, setToken] = useState<string | undefined>(undefined);
+  const [preOrder, setPreOrder] = useState<unknown[]>([]);
+  const [order, setOrder] = useState<Order>({
     combo: [],
     sanduiche: [],
     bebida: [],
@@ -62,9 +95,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-function useAuth() {
+function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
   return context;
 }
 
-export { AuthProvider, useAuth };
+export { AuthProvider, useAuth, type AuthContextType };
