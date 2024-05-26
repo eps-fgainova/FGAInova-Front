@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import api from "../../service";
 import CardPopularPicks from "../../components/CardPopularPicks";
+import { IProjeto } from "../../Interface/Projeto";
 
 interface BlogAuthorProps {
   date: Date;
@@ -49,6 +50,7 @@ const Perfil = () => {
   const emailToPut = data?.email;
 
   const [show, setShow] = React.useState(false);
+  const [projetos, setProjetos] = useState<IProjeto[]>([]);
   const handleClick = () => setShow(!show);
   const toast = useToast();
 
@@ -81,12 +83,23 @@ const Perfil = () => {
     }
   }, [data._id, token]); // Adicione `data._id` e `token` como dependências do useEffect
 
-
-  // const [formData, setFormData] = useState({
-  //   nome: data?.nome || "",
-  //   senha: "",
-  //   email: data?.email || "",
-  // });
+  useEffect(() => {
+    // Faça a solicitação à API para buscar os projetos
+    api
+      .get<IProjeto[]>("/projeto", {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        // Atualize o estado com os dados recebidos da API
+        setProjetos(res.data);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar projetos:", err);
+      });
+  }, []); // 
+  
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -98,8 +111,7 @@ const Perfil = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    try {
-      console.log("Body: ", formData);
+    try {      
       const response = await api
         .put(`/cliente/${emailToPut}`, formData, {
           headers: {
@@ -247,15 +259,23 @@ const Perfil = () => {
       </Box>
       <Divider marginTop="5" mt={"1rem"} />
       <Heading paddingTop="40px" as="h2">
-        Meus Projeto
-      </Heading>
+        Meus Projetos
+      </Heading>      
       <SimpleGrid columns={[2, null, 3]} spacing="40px">
+        {/* <CardPopularPicks />
         <CardPopularPicks />
         <CardPopularPicks />
         <CardPopularPicks />
         <CardPopularPicks />
-        <CardPopularPicks />
-        <CardPopularPicks />
+        <CardPopularPicks /> */}
+        {projetos.map((projeto) => (
+          <CardPopularPicks
+            key={projeto._id}
+            titulo={projeto.titulo}
+            descricaoCurta={projeto.descricaoCurta}
+            _id={projeto._id}
+          />
+        ))}
       </SimpleGrid>
       <Button
         isLoading={false}

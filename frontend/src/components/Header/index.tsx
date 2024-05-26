@@ -48,7 +48,7 @@ export default function Header() {
 
   const handleStatusUser = () => {
     if (isAuthenticate) {
-      navigateHeader("/criar-projetos");
+      navigateHeader("/criar-projetos/");
     } else {
       navigateHeader("/cadastro");
     }

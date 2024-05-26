@@ -10,6 +10,7 @@ import NotFound from "../pages/NotFound";
 import Sobre from "../pages/Sobre";
 import { ProtectedLayout } from "../components/ ProtectedLayout";
 import Perfil from "../pages/Perfil";
+import NovoProjeto from "../pages/NovoProjeto";
 
 export const RoutesMain = () => {
   // const { user } = useAuth();
@@ -62,22 +63,22 @@ export const RoutesMain = () => {
         />
 
         <Route
-          path="/criar-projetos"
+          path="/criar-projetos/"
           element={
             <ProtectedLayout>
-              <h1>Criar-projetos🔥</h1>
+              <NovoProjeto/>
             </ProtectedLayout>
           }
         />
 
-        <Route
+        {/* <Route
           path="/meus-projetos"
           element={
             <ProtectedLayout>
               <h1>Meus-projetos🔥</h1>
             </ProtectedLayout>
           }
-        />
+        /> */}
 
         <Route path="*" element={<NotFound />} />
       </Routes>
