@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import api from "../../service";
 import { useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
 const avatars = [
   {
@@ -50,6 +51,14 @@ export default function Cadastro() {
     senha: "",
   });
 
+  const { isAuthenticate } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticate) {
+      navigate("/perfil");
+    }
+  }, [isAuthenticate]);
+
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -80,10 +89,11 @@ export default function Cadastro() {
         });
     } catch (error) {
       const errorMessage = (error as { response: { data: { erro: string } } })
-        .response.data.erro;      
-        toast({
+        .response.data.erro;
+      toast({
         title: "Algo esta errado. 😥",
-        description: errorMessage.length > 0 ? errorMessage :"Verifique os campos!",
+        description:
+          errorMessage.length > 0 ? errorMessage : "Verifique os campos!",
         status: "error",
         duration: 3000,
         isClosable: true,

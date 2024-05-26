@@ -62,23 +62,24 @@ export const RoutesMain = () => {
           }
         />
 
+        {/* Rotas de Projeto  */}
         <Route
-          path="/criar-projetos/"
+          path="/criar-projetos"
           element={
             <ProtectedLayout>
-              <NovoProjeto/>
+              <NovoProjeto />
             </ProtectedLayout>
           }
         />
 
-        {/* <Route
-          path="/meus-projetos"
+        <Route
+          path="/projeto/editar/:id"
           element={
             <ProtectedLayout>
-              <h1>Meus-projetos🔥</h1>
+              <NovoProjeto />
             </ProtectedLayout>
           }
-        /> */}
+        />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

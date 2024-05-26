@@ -83,7 +83,7 @@ const Perfil = () => {
     }
   }, [data._id, token]); // Adicione `data._id` e `token` como dependências do useEffect
 
-  useEffect(() => {
+  const fetchProjetos = async () => {
     // Faça a solicitação à API para buscar os projetos
     api
       .get<IProjeto[]>("/projeto", {
@@ -98,6 +98,10 @@ const Perfil = () => {
       .catch((err) => {
         console.error("Erro ao buscar projetos:", err);
       });
+  }
+
+  useEffect(() => {
+    fetchProjetos();
   }, []); // 
   
 
@@ -273,7 +277,10 @@ const Perfil = () => {
             key={projeto._id}
             titulo={projeto.titulo}
             descricaoCurta={projeto.descricaoCurta}
+            tags={projeto.tags}
             _id={projeto._id}
+            pessoaId={projeto.pessoaId}
+            onDeleteSuccess={fetchProjetos}
           />
         ))}
       </SimpleGrid>

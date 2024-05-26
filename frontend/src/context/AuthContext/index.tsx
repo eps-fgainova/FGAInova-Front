@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Defina a interface AuthContextType
 interface User {
+  _id: string | undefined;
   id?: string;
   name?: string;
   // Outros campos do usuário, conforme necessário
@@ -39,7 +40,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticate, setIsAuthenticate] = useState<boolean>(false);
-  const [user, setUser] = useState<User>({});
+  const [user, setUser] = useState<User>({
+    _id: undefined,
+    id: undefined,
+    name: undefined,
+  });
   const [token, setToken] = useState<string | undefined>(undefined);
   const [preOrder, setPreOrder] = useState<unknown[]>([]);
   const [order, setOrder] = useState<Order>({

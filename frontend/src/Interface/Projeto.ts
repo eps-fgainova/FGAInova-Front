@@ -11,6 +11,7 @@ export interface IProjeto {
     descricao: string;
     descricaoCurta: string;
     linkVideo: string;
+    tags: string[];
     pessoaId: string;
     __v: number;
   }

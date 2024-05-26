@@ -11,6 +11,7 @@
 }
 .input:focus {
   outline: none;
+  cursor: pointer;
 }
 .item_text {
   margin-right: 4px;

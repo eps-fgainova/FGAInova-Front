@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useParams } from "react-router-dom";
 import {
   ChakraProvider,
   Box,
@@ -11,6 +12,8 @@ import {
   InputGroup,
   InputLeftElement,
   Container,
+  Heading,
+  useToast,
 } from "@chakra-ui/react";
 import {
   FaFacebook,
@@ -22,7 +25,15 @@ import {
 import api from "../../service";
 import InputTag, { TagData } from "../../components/InputTag";
 
+interface IParams {
+  id?: string;
+  [key: string]: string | undefined;
+}
+
 const CreateProjectForm: React.FC = () => {
+  const { id } = useParams<IParams>();
+  const toast = useToast();
+
   const [titulo, setTitulo] = useState<string>("");
   const [descricao, setDescricao] = useState<string>("");
   const [descricaoCurta, setDescricaoCurta] = useState<string>("");
@@ -36,6 +47,47 @@ const CreateProjectForm: React.FC = () => {
   const [linkVideo, setLinkVideo] = useState<string>("");
   const [tags, setTags] = useState<TagData[]>([]);
   const token = JSON.parse(sessionStorage.getItem("@token") || "");
+
+  useEffect(() => {
+    if (id) {
+      api
+        .get(`/projeto/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          const {
+            titulo,
+            descricao,
+            descricaoCurta,
+            linksRedesSociais,
+            linkVideo,
+            tags,
+          } = response.data;
+          setTitulo(titulo);
+          setDescricao(descricao);
+          setDescricaoCurta(descricaoCurta);
+          setLinksRedesSociais(linksRedesSociais);
+          setLinkVideo(linkVideo);
+          setTags(tags.map((tag: string) => ({ id: tag, text: tag })));
+        })
+        .catch((error) => console.error("Erro ao buscar projeto:", error));
+    } else {
+      setTitulo("");
+      setDescricao("");
+      setDescricaoCurta("");
+      setLinksRedesSociais({
+        facebook: "",
+        twitter: "",
+        instagram: "",
+        linkedin: "",
+        youtube: "",
+      });
+      setLinkVideo("");
+      setTags([]);
+    }
+  }, [id, token]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -62,29 +114,32 @@ const CreateProjectForm: React.FC = () => {
     };
 
     try {
-      await api
-        .post("/projeto", data, {
+      if (id) {
+        await api
+          .put(`/projeto/${id}`, data, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(() => {
+            toast({
+              title: "Projeto Atualizado com Sucesso! 😁",
+              description: "Atualizamos seu projeto. 😉",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+              position: "bottom-left",
+            });
+          });
+      } else {
+        await api.post("/projeto", data, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-        .then(() => {
-          // Limpa o formulário após o envio
-          setTitulo("");
-          setDescricao("");
-          setDescricaoCurta("");
-          setLinksRedesSociais({
-            facebook: "",
-            twitter: "",
-            instagram: "",
-            linkedin: "",
-            youtube: "",
-          });
         });
-
-      setLinkVideo("");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao enviar projeto:", error);
     }
   };
 
@@ -98,6 +153,9 @@ const CreateProjectForm: React.FC = () => {
     <Container maxW={"7xl"} p="12">
       <ChakraProvider>
         <Box p={5}>
+          <Heading as="h1" mb={"1rem"}>
+            {id ? "Editar Projeto " : "Novo Projeto 😎"}
+          </Heading>
           <VStack
             as="form"
             spacing={5}
@@ -216,7 +274,7 @@ const CreateProjectForm: React.FC = () => {
               mt={4}
               w={"full"}
             >
-              Enviar
+              {id ? "Salvar Alterações" : "Enviar"}
             </Button>
           </VStack>
         </Box>
