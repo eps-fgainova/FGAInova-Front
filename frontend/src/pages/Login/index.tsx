@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Stack,
@@ -10,22 +10,36 @@ import {
   Button,
   SimpleGrid,
   Flex,
+  useToast,
 } from "@chakra-ui/react";
-import api from '../../service';
-import { useNavigate } from 'react-router';
-import { useAuth } from '../../context/AuthContext';
-
+import api from "../../service";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";
+import { AxiosResponse } from "axios";
+// AxiosError
 export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   const navigate = useNavigate();
   const { setUser, setIsAuthenticate, isAuthenticate } = useAuth();
+  const toast = useToast();
 
+  interface ErroRequest extends AxiosResponse<unknown, unknown> {
+    response: {
+      data: {
+        erro: string;
+      };
+      status: number;
+      statusText: string;
+      headers: unknown;
+      config: unknown;
+    };
+  }
 
   useEffect(() => {
     if (isAuthenticate) {
-      navigate('/perfil');
+      navigate("/perfil");
     }
   }, [isAuthenticate]);
 
@@ -38,23 +52,36 @@ export default function Login() {
     };
 
     try {
-      const response = await api.post('/signin', data).then(res => {
+      const response = await api.post("/signin", data).then((res) => {
         return res;
       });
       if (response.status === 200) {
-        sessionStorage.setItem('@user', JSON.stringify({
-          ...response.data.pessoa,
-          funcao: 'Cliente'
-        }));
-        sessionStorage.setItem('@token', JSON.stringify(response.data.token));
+        sessionStorage.setItem(
+          "@user",
+          JSON.stringify({
+            ...response.data.pessoa,
+            funcao: "Cliente",
+          })
+        );
+        sessionStorage.setItem("@token", JSON.stringify(response.data.token));
         setUser({
           ...response.data,
-          funcao: 'Cliente'
+          funcao: "Cliente",
         });
         setIsAuthenticate(true);
       }
     } catch (error) {
-      console.error('Erro:', error);
+      const { response } = error as ErroRequest;      
+      toast({
+        title: "Algo esta errado. 😥",
+        description: response?.data.erro
+          ? response?.data.erro
+          : "Ocorreu um erro! 🤨",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom-left",
+      });
     }
   };
 

@@ -54,7 +54,6 @@ const Perfil = () => {
   const handleClick = () => setShow(!show);
   const toast = useToast();
 
-
   const [formData, setFormData] = useState({
     nome: "",
     senha: "",
@@ -62,7 +61,8 @@ const Perfil = () => {
   });
 
   useEffect(() => {
-    if (data._id && token) { // Verifique se `data._id` e `token` estão disponíveis
+    if (data._id && token) {
+      // Verifique se `data._id` e `token` estão disponíveis
       api
         .get(`/cliente/${data._id}`, {
           headers: {
@@ -98,12 +98,11 @@ const Perfil = () => {
       .catch((err) => {
         console.error("Erro ao buscar projetos:", err);
       });
-  }
+  };
 
   useEffect(() => {
     fetchProjetos();
-  }, []); // 
-  
+  }, []); //
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -115,7 +114,7 @@ const Perfil = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    try {      
+    try {
       const response = await api
         .put(`/cliente/${emailToPut}`, formData, {
           headers: {
@@ -264,14 +263,8 @@ const Perfil = () => {
       <Divider marginTop="5" mt={"1rem"} />
       <Heading paddingTop="40px" as="h2">
         Meus Projetos
-      </Heading>      
+      </Heading>
       <SimpleGrid columns={[2, null, 3]} spacing="40px">
-        {/* <CardPopularPicks />
-        <CardPopularPicks />
-        <CardPopularPicks />
-        <CardPopularPicks />
-        <CardPopularPicks />
-        <CardPopularPicks /> */}
         {projetos.map((projeto) => (
           <CardPopularPicks
             key={projeto._id}

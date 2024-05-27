@@ -16,12 +16,13 @@ import {
   AlertDialogFooter,
   useToast,
   Avatar,
+  background,
 } from "@chakra-ui/react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useRef } from "react";
 import api from "../../service";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 interface ICardPopularPicks {
   titulo?: string;
@@ -29,7 +30,7 @@ interface ICardPopularPicks {
   _id?: string;
   tags?: string[];
   pessoaId?: string;
-  onDeleteSuccess: () => void;
+  onDeleteSuccess?: () => void;
 }
 
 export default function CardPopularPicks({
@@ -44,8 +45,13 @@ export default function CardPopularPicks({
   const navigate = useNavigate();
   console.log("user:", user._id, pessoaId);
   console.log("Id para redirecionar: ", _id);
+  const location = useLocation();
+  const locationHome =
+    location.pathname === "/" || location.pathname === "/projetos";
 
-  const token = JSON.parse(sessionStorage.getItem("@token") || "");
+  const token =
+    sessionStorage.getItem("@token") &&
+    JSON.parse(sessionStorage.getItem("@token") || "");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
@@ -69,7 +75,7 @@ export default function CardPopularPicks({
             position: "bottom-left",
           });
           onClose();
-          onDeleteSuccess();
+          onDeleteSuccess && onDeleteSuccess();
         });
     } catch (error) {
       toast({
@@ -84,8 +90,8 @@ export default function CardPopularPicks({
   };
 
   const handleEdit = () => {
-    navigate(`/projeto/editar/${_id}`)
-  }
+    navigate(`/projeto/editar/${_id}`);
+  };
 
   return (
     <>
@@ -179,13 +185,14 @@ export default function CardPopularPicks({
             <Text
               h={"full"}
               minH={"208px"}
-              color={"gray.500"} 
-              noOfLines={8}                           
+              color={"gray.500"}
+              noOfLines={8}
+              textAlign={"justify"}
             >
               {descricaoCurta}
             </Text>
           </Stack>
-          {pessoaId === user._id ? (
+          {pessoaId === user._id && !locationHome ? (
             <Stack
               mt={6}
               direction={"row"}
@@ -204,7 +211,7 @@ export default function CardPopularPicks({
               <Button
                 rightIcon={<FaRegTrashAlt />}
                 colorScheme="red"
-                onClick={onOpen}                
+                onClick={onOpen}
               >
                 Deletar
               </Button>
@@ -218,6 +225,16 @@ export default function CardPopularPicks({
                 <Text fontWeight={600}>Achim Rolle</Text>
                 <Text color={"gray.500"}>Feb 08, 2021 · 6min read</Text>
               </Stack>
+              <Button
+                // rightIcon={<FaRegTrashAlt />}
+                colorScheme="teal"
+                // width={"100%"}
+                onClick={() => {
+                  console.log("Deletar");
+                }}
+              >
+                + Info
+              </Button>
             </Stack>
           )}
         </Box>
