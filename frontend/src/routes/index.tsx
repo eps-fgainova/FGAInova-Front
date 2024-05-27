@@ -8,6 +8,9 @@ import Projetos from "../pages/Projetos";
 import Newsletter from "../pages/Newsletter";
 import NotFound from "../pages/NotFound";
 import Sobre from "../pages/Sobre";
+import { ProtectedLayout } from "../components/ ProtectedLayout";
+import Perfil from "../pages/Perfil";
+import NovoProjeto from "../pages/NovoProjeto";
 
 export const RoutesMain = () => {
   // const { user } = useAuth();
@@ -41,22 +44,44 @@ export const RoutesMain = () => {
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />        
+        <Route path="/" element={<Home />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/login" element={<Login/>} />        
-        <Route path="/projetos" element={<Projetos/>} />        
-        <Route path="/sobre" element={<Sobre/>} />        
-        <Route path="/newsletter" element={<Newsletter/>} />        
+        <Route path="/login" element={<Login />} />
+
+        <Route path="/projetos" element={<Projetos />} />
+
+        <Route path="/sobre" element={<Sobre />} />
+        <Route path="/newsletter" element={<Newsletter />} />
         {/* {listaPedidosRoutes()} */}
-        {/* <Route
+        <Route
           path="/perfil"
           element={
             <ProtectedLayout>
-              <PerfilUsuario />
+              <Perfil />
             </ProtectedLayout>
           }
-        /> */}        
-        <Route path="*" element={<NotFound/>} />
+        />
+
+        {/* Rotas de Projeto  */}
+        <Route
+          path="/criar-projetos"
+          element={
+            <ProtectedLayout>
+              <NovoProjeto />
+            </ProtectedLayout>
+          }
+        />
+
+        <Route
+          path="/projeto/editar/:id"
+          element={
+            <ProtectedLayout>
+              <NovoProjeto />
+            </ProtectedLayout>
+          }
+        />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </Router>

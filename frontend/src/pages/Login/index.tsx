@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Stack,
@@ -9,9 +10,81 @@ import {
   Button,
   SimpleGrid,
   Flex,
+  useToast,
 } from "@chakra-ui/react";
-
+import api from "../../service";
+import { useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";
+import { AxiosResponse } from "axios";
+// AxiosError
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const navigate = useNavigate();
+  const { setUser, setIsAuthenticate, isAuthenticate } = useAuth();
+  const toast = useToast();
+
+  interface ErroRequest extends AxiosResponse<unknown, unknown> {
+    response: {
+      data: {
+        erro: string;
+      };
+      status: number;
+      statusText: string;
+      headers: unknown;
+      config: unknown;
+    };
+  }
+
+  useEffect(() => {
+    if (isAuthenticate) {
+      navigate("/perfil");
+    }
+  }, [isAuthenticate]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const data = {
+      email,
+      senha,
+    };
+
+    try {
+      const response = await api.post("/signin", data).then((res) => {
+        return res;
+      });
+      if (response.status === 200) {
+        sessionStorage.setItem(
+          "@user",
+          JSON.stringify({
+            ...response.data.pessoa,
+            funcao: "Cliente",
+          })
+        );
+        sessionStorage.setItem("@token", JSON.stringify(response.data.token));
+        setUser({
+          ...response.data,
+          funcao: "Cliente",
+        });
+        setIsAuthenticate(true);
+      }
+    } catch (error) {
+      const { response } = error as ErroRequest;      
+      toast({
+        title: "Algo esta errado. 😥",
+        description: response?.data.erro
+          ? response?.data.erro
+          : "Ocorreu um erro! 🤨",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
+  };
+
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} py={12}>
       <Container
@@ -22,73 +95,6 @@ export default function Login() {
         justifyContent={"center"}
         py={{ base: 10, sm: 20, lg: 32 }}
       >
-        {/* <Stack spacing={{ base: 10, md: 20 }}>
-          <Heading
-            lineHeight={1.1}
-            fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }}
-          >
-            Iniciativas inovadoras{" "}
-            <Text as={"span"} bgColor={"teal.400"} bgClip="text">
-              para projetos
-            </Text>{" "}
-            universitários
-          </Heading>
-          <Stack direction={"row"} spacing={4} align={"center"}>
-            <AvatarGroup>
-              {avatars.map((avatar) => (
-                <Avatar
-                  key={avatar.name}
-                  name={avatar.name}
-                  src={avatar.url}
-                  size={useBreakpointValue({ base: "md", md: "lg" })}
-                  position={"relative"}
-                  zIndex={2}
-                  _before={{
-                    content: '""',
-                    width: "full",
-                    height: "full",
-                    rounded: "full",
-                    transform: "scale(1.125)",
-                    bgGradient: "linear(to-bl, teal.400,pink.400)",
-                    position: "absolute",
-                    zIndex: -1,
-                    top: 0,
-                    left: 0,
-                  }}
-                />
-              ))}
-            </AvatarGroup>
-            <Text fontFamily={"heading"} fontSize={{ base: "4xl", md: "6xl" }}>
-              +
-            </Text>
-            <Flex
-              align={"center"}
-              justify={"center"}
-              fontFamily={"heading"}
-              fontSize={{ base: "sm", md: "lg" }}
-              bg={"gray.800"}
-              color={"white"}
-              rounded={"full"}
-              minWidth={useBreakpointValue({ base: "44px", md: "60px" })}
-              minHeight={useBreakpointValue({ base: "44px", md: "60px" })}
-              position={"relative"}
-              _before={{
-                content: '""',
-                width: "full",
-                height: "full",
-                rounded: "full",
-                transform: "scale(1.125)",
-                bgGradient: "linear(to-bl, teal.400,yellow.400)",
-                position: "absolute",
-                zIndex: -1,
-                top: 0,
-                left: 0,
-              }}
-            >
-              YOU
-            </Flex>
-          </Stack>
-        </Stack> */}
         <Stack
           bg={"gray.50"}
           rounded={"xl"}
@@ -111,7 +117,7 @@ export default function Login() {
               Não compartilhe sua senha com ninguém!
             </Text>
           </Stack>
-          <Box as={"form"} mt={1}>
+          <Box as={"form"} mt={1} onSubmit={handleSubmit}>
             <Stack spacing={4}>
               <Input
                 placeholder="seuemail@mail.com"
@@ -121,6 +127,8 @@ export default function Login() {
                 _placeholder={{
                   color: "gray.500",
                 }}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <Input
                 placeholder="Senha"
@@ -131,9 +139,12 @@ export default function Login() {
                   color: "gray.500",
                 }}
                 type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
               />
             </Stack>
             <Button
+              type="submit"
               fontFamily={"heading"}
               mt={8}
               w={"full"}
@@ -147,7 +158,6 @@ export default function Login() {
               Entrar
             </Button>
           </Box>
-          form
         </Stack>
       </Container>
     </Flex>
