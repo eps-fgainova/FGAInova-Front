@@ -1,12 +1,12 @@
-
+import { AppProvider } from "./context";
 import { RoutesMain } from "./routes";
 
 function App() {
-  
-
   return (
     <>
-      <RoutesMain />
+      <AppProvider>
+        <RoutesMain />
+      </AppProvider>
     </>
   );
 }

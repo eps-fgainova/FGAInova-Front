@@ -16,6 +16,12 @@ import {
   useDisclosure,
   Container,
   Image,
+  Menu,
+  MenuButton,
+  Avatar,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -23,11 +29,30 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
-import { Link as LinkRouter } from "react-router-dom";
+import { Link as LinkRouter, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logoFga-03.svg";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Header() {
   const { isOpen, onToggle } = useDisclosure();
+  const { isAuthenticate, logOut } = useAuth();
+
+  const navigateHeader = useNavigate();
+
+  const handleLogOut = () => {
+    if (isAuthenticate) {
+      logOut();
+      navigateHeader("/");
+    }
+  };
+
+  const handleStatusUser = () => {
+    if (isAuthenticate) {
+      navigateHeader("/criar-projetos/");
+    } else {
+      navigateHeader("/cadastro");
+    }
+  };
 
   return (
     // <Container maxW={"7xl"} py={12}>
@@ -69,12 +94,16 @@ export default function Header() {
               fontFamily={"heading"}
               color={useColorModeValue("gray.800", "white")}
             >
-              <LinkRouter to={"/"}>                
-                <Image boxSize='60px' src={Logo} alt='Logo FGA Inova' />
+              <LinkRouter to={"/"}>
+                <Image boxSize="60px" src={Logo} alt="Logo FGA Inova" />
               </LinkRouter>
             </Text>
 
-            <Flex display={{ base: "none", md: "flex"}} alignItems="center" ml={10}>
+            <Flex
+              display={{ base: "none", md: "flex" }}
+              alignItems="center"
+              ml={10}
+            >
               <DesktopNav />
             </Flex>
           </Flex>
@@ -85,15 +114,17 @@ export default function Header() {
             direction={"row"}
             spacing={6}
           >
-            <Button
-              as={"a"}
-              fontSize={"sm"}
-              fontWeight={400}
-              variant={"link"}
-              href={"#"}
-            >
-              <LinkRouter to={"/login"}>Entrar</LinkRouter>
-            </Button>
+            {!isAuthenticate && (
+              <Button
+                as={"a"}
+                fontSize={"sm"}
+                fontWeight={400}
+                variant={"link"}
+                href={"#"}
+              >
+                <LinkRouter to={"/login"}>Entrar</LinkRouter>
+              </Button>
+            )}
             <Button
               as={"a"}
               display={{ base: "none", md: "inline-flex" }}
@@ -105,9 +136,56 @@ export default function Header() {
               _hover={{
                 bg: "teal.300",
               }}
+              onClick={handleStatusUser}
             >
-              <LinkRouter to={"/cadastro"}>Cadastrar</LinkRouter>
+              {isAuthenticate ? "Criar Projeto" : "Cadastrar"}
             </Button>
+
+            {isAuthenticate && (
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rounded={"full"}
+                  variant={"link"}
+                  cursor={"pointer"}
+                  minW={0}
+                >
+                  <Avatar
+                    size={"sm"}
+                    src={
+                      "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                    }
+                  />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>
+                    <LinkRouter to={"/perfil"}>Perfil</LinkRouter>
+                  </MenuItem>
+                  <MenuItem>
+                    <LinkRouter to={"/meus-projetos"}>Meus Projetos</LinkRouter>
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem>
+                    <Button
+                      as={"a"}
+                      w={"100%"}
+                      display={{ base: "none", md: "inline-flex" }}
+                      fontSize={"sm"}
+                      fontWeight={600}
+                      color={"white"}
+                      bg={"teal.400"}
+                      href={"#"}
+                      _hover={{
+                        bg: "teal.300",
+                      }}
+                      onClick={handleLogOut}
+                    >
+                      Sair
+                    </Button>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            )}
           </Stack>
         </Flex>
 
