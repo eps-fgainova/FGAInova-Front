@@ -3,7 +3,7 @@ version: '3.4'
 services:
   front:
     build:
-      context: ./frontend
+      # context: ./frontend
       dockerfile: Dockerfile
     restart: always
     # stdin_open: true
@@ -13,4 +13,4 @@ services:
     # environment:
     #   CHOKIDAR_USEPOLLING: "true"
     volumes:
-      - ./frontend/src:/app/src
+      - ./src:/app/src
