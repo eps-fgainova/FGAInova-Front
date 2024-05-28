@@ -15,8 +15,7 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   useToast,
-  Avatar,
-  background,
+  Avatar,  
 } from "@chakra-ui/react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
@@ -53,8 +52,8 @@ export default function CardPopularPicks({
     sessionStorage.getItem("@token") &&
     JSON.parse(sessionStorage.getItem("@token") || "");
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
+  const { isOpen, onOpen, onClose } = useDisclosure();  
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
 
   const handleDelete = () => {
@@ -217,7 +216,7 @@ export default function CardPopularPicks({
               </Button>
             </Stack>
           ) : (
-            <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
+            <Stack mt={6} direction={"row"} spacing={4} align={"center"} justifyContent={"space-between"}>
               <Avatar
                 src={"https://avatars0.githubusercontent.com/u/1164541?v=4"}
               />
@@ -230,7 +229,7 @@ export default function CardPopularPicks({
                 colorScheme="teal"
                 // width={"100%"}
                 onClick={() => {
-                  console.log("Deletar");
+                  navigate(`/projeto/${_id}`);
                 }}
               >
                 + Info
