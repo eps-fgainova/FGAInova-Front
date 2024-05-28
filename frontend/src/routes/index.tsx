@@ -11,6 +11,7 @@ import Sobre from "../pages/Sobre";
 import { ProtectedLayout } from "../components/ ProtectedLayout";
 import Perfil from "../pages/Perfil";
 import NovoProjeto from "../pages/NovoProjeto";
+import ProjetoView from "../pages/ProjetoView";
 
 export const RoutesMain = () => {
   // const { user } = useAuth();
@@ -52,6 +53,7 @@ export const RoutesMain = () => {
 
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/newsletter" element={<Newsletter />} />
+        <Route path="/projeto/:id" element={<ProjetoView/>} />
         {/* {listaPedidosRoutes()} */}
         <Route
           path="/perfil"
