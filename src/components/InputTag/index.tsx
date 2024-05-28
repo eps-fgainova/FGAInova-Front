@@ -22,16 +22,21 @@ export default function InputTag(props: {
     ref_input.current?.focus(); // auto focus input
 
     const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      const newText = event.target.value.trim().replace(",", "");
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      const newText = (event.target as HTMLInputElement).value.trim().replace(",", "");
       switch (event.key) {
         case ",":
           if (newText.length > 0) {
             const dataInputTemp = [...dataInput];
             dataInputTemp.push({ text: newText });
             setDataIput([...dataInputTemp]);
-            ref_input.current.value = "";
+            if (ref_input.current) {
+              ref_input.current.value = "";
+            }
           } else {
-            ref_input.current.value = "";
+            if (ref_input.current) {
+              ref_input.current.value = "";
+            }
           }
           break;
         case "Enter":
@@ -39,7 +44,9 @@ export default function InputTag(props: {
             const dataInputTemp = [...dataInput];
             dataInputTemp.push({ text: newText });
             setDataIput([...dataInputTemp]);
-            ref_input.current.value = "";
+            if (ref_input.current) {
+              ref_input.current.value = "";
+            }
             props.onChange && props.onChange(dataInputTemp); // Call onChange only on Enter
           }
           break;
@@ -55,17 +62,19 @@ export default function InputTag(props: {
       }
     };
 
-    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("keyup", handleKeyUp as unknown as (event: KeyboardEvent) => void);
 
-    return () => window.removeEventListener("keyup", handleKeyUp);
+    return () => window.removeEventListener("keyup", handleKeyUp as unknown as (event: KeyboardEvent) => void);
   }, [sizeInput, dataInput]);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
+    const value = e.target.value;
     if (value.trim().length > 0) {
       setSizeInput(value.length);
     } else {
-      ref_input.current.value = "";
+      if (ref_input.current) {
+        ref_input.current.value = "";
+      }
     }
   };
 
