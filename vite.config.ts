@@ -9,4 +9,13 @@ export default defineConfig({
       usePolling: true,
     },
   },
+  test: {
+    environment: 'jsdom',
+    coverage: {
+      provider:'istanbul',
+      reporter: ['text', 'json', 'html']
+    },
+    globals: true,
+    setupFiles: './tests/setup.js'
+  }
 })
