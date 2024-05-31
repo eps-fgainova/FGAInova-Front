@@ -1,0 +1,11 @@
+name: DEPLOY - HOMOLOG
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  Vercel:
+    name: TriggerVercelBuildHOMOLOG
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl ${{ secrets.HOMOLOG_VERCEL_HOMOLOG }}

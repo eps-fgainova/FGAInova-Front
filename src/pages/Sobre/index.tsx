@@ -108,11 +108,7 @@ const Sobre = () => {
           marginTop={{ base: "3", sm: "0" }}
         >
           <BlogTags tags={["Produto", "Objetivos", "Metas"]} />
-          <Heading marginTop="1">
-            <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
-              Objetivos
-            </Link>
-          </Heading>
+          <Heading marginTop="1" as="h2">Objetivos</Heading>
           <Text
             as="p"
             marginTop="2"
