@@ -189,7 +189,7 @@ const CreateProjectForm: React.FC = () => {
     if (logoFile) {
       formData.append("logo", logoFile);
     }
-    imagens.forEach((imagem, index) => {
+    imagens.forEach((imagem) => {
       formData.append(`imagens`, imagem);
     });
     removedImages.forEach((imageUrl, index) => {
