@@ -19,6 +19,7 @@ import '@testing-library/cypress/add-commands'
 import 'cypress-real-events/support'
 import 'cypress-react-app-actions'
 import 'cypress-each'
+import '@cypress/code-coverage/support'
 // import 'cypress-axe'
 
 // Alternatively you can use CommonJS syntax:
