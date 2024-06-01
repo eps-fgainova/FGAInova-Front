@@ -158,12 +158,9 @@ export default function Header() {
                   />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem>
-                    <LinkRouter to={"/perfil"}>Perfil</LinkRouter>
-                  </MenuItem>
-                  <MenuItem>
-                    <LinkRouter to={"/meus-projetos"}>Meus Projetos</LinkRouter>
-                  </MenuItem>
+                  <LinkRouter to={"/perfil"}>
+                    <MenuItem>Perfil</MenuItem>
+                  </LinkRouter>                  
                   <MenuDivider />
                   <MenuItem>
                     <Button

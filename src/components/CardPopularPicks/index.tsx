@@ -41,9 +41,7 @@ export default function CardPopularPicks({
   onDeleteSuccess,
 }: ICardPopularPicks) {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  console.log("user:", user._id, pessoaId);
-  console.log("Id para redirecionar: ", _id);
+  const navigate = useNavigate();  
   const location = useLocation();
   const locationHome =
     location.pathname === "/" || location.pathname === "/projetos";

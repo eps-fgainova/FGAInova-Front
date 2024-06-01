@@ -13,6 +13,8 @@ import Perfil from "../pages/Perfil";
 import NovoProjeto from "../pages/NovoProjeto";
 import ProjetoView from "../pages/ProjetoView";
 
+
+
 export const RoutesMain = () => {
   // const { user } = useAuth();
 
