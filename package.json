@@ -31,8 +31,10 @@
     "react-router": "^6.23.0",
     "react-router-dom": "^6.23.0",
     "save-dev": "^0.0.1-security",
+    "react-select": "^5.8.0",
     "sort-by": "^1.2.0",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "swiper": "^11.1.4"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.12.39",
