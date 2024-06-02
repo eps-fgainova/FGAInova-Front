@@ -9,7 +9,7 @@ import {
 import CardPopularPicks from "../CardPopularPicks";
 import { Link as LinkRouter } from "react-router-dom";
 import { useEffect, useState } from "react";
-import api from "../../service";
+import { api } from "../../service";
 import { IProjeto } from "../../Interface/Projeto";
 
 export default function PopularPicks() {

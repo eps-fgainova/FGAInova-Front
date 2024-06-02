@@ -14,7 +14,7 @@ import {
   Avatar,
 } from "@chakra-ui/react";
 import { IProjeto } from "../../Interface/Projeto";
-import api from "../../service";
+import { api } from "../../service";
 import {
   FaFacebook,
   FaTwitter,
@@ -129,7 +129,7 @@ const ProjetoView = () => {
           {projeto.descricao}
         </Text>
 
-        {projeto.imagens.length && (
+        {projeto.imagens.length > 0 && (
           <>
             <Heading mt={4} mb={6}>
               Imagens do Projeto
@@ -235,7 +235,13 @@ const ProjetoView = () => {
           )}
 
           {projeto.linksRedesSociais.site && (
-            <Button leftIcon={<FaExternalLinkAlt />} bg='black' color='white' _hover={{ bg: 'blackAlpha.800' }} variant="solid">
+            <Button
+              leftIcon={<FaExternalLinkAlt />}
+              bg="black"
+              color="white"
+              _hover={{ bg: "blackAlpha.800" }}
+              variant="solid"
+            >
               <Link href={projeto.linksRedesSociais.site} isExternal>
                 Site
               </Link>

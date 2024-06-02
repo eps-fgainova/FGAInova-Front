@@ -15,12 +15,12 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   useToast,
-  Avatar,  
+  Avatar,
 } from "@chakra-ui/react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useRef } from "react";
-import api from "../../service";
+import { api } from "../../service";
 import { useLocation, useNavigate } from "react-router";
 
 interface ICardPopularPicks {
@@ -41,7 +41,7 @@ export default function CardPopularPicks({
   onDeleteSuccess,
 }: ICardPopularPicks) {
   const { user } = useAuth();
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const location = useLocation();
   const locationHome =
     location.pathname === "/" || location.pathname === "/projetos";
@@ -50,7 +50,7 @@ export default function CardPopularPicks({
     sessionStorage.getItem("@token") &&
     JSON.parse(sessionStorage.getItem("@token") || "");
 
-  const { isOpen, onOpen, onClose } = useDisclosure();  
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
 
@@ -214,7 +214,13 @@ export default function CardPopularPicks({
               </Button>
             </Stack>
           ) : (
-            <Stack mt={6} direction={"row"} spacing={4} align={"center"} justifyContent={"space-between"}>
+            <Stack
+              mt={6}
+              direction={"row"}
+              spacing={4}
+              align={"center"}
+              justifyContent={"space-between"}
+            >
               <Avatar
                 src={"https://avatars0.githubusercontent.com/u/1164541?v=4"}
               />

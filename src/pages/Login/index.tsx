@@ -12,7 +12,7 @@ import {
   Flex,
   useToast,
 } from "@chakra-ui/react";
-import api from "../../service";
+import { apiAuth } from "../../service";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { AxiosResponse } from "axios";
@@ -52,7 +52,7 @@ export default function Login() {
     };
 
     try {
-      const response = await api.post("/signin", data).then((res) => {
+      const response = await apiAuth.post("/signin", data).then((res) => {
         return res;
       });
       if (response.status === 200) {
@@ -71,7 +71,7 @@ export default function Login() {
         setIsAuthenticate(true);
       }
     } catch (error) {
-      const { response } = error as ErroRequest;      
+      const { response } = error as ErroRequest;
       toast({
         title: "Algo esta errado. 😥",
         description: response?.data.erro
