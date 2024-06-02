@@ -13,36 +13,7 @@ import Perfil from "../pages/Perfil";
 import NovoProjeto from "../pages/NovoProjeto";
 import ProjetoView from "../pages/ProjetoView";
 
-
-
 export const RoutesMain = () => {
-  // const { user } = useAuth();
-
-  // const listaPedidosRoutes = () => {
-  //   switch (user.funcao) {
-  //     case 'Cliente':
-  //       return (
-  //         <Route
-  //
-  //           path="/lista-pedidos"
-  //           element={<ListaPedidosCliente />}
-  //         />
-  //       );
-  //     case 'Funcionario':
-  //       return (
-  //         <Route
-  //
-  //           path="/lista-pedidos"
-  //           element={<ListaPedidosFuncionario />}
-  //         />
-  //       );
-  //     case 'Entregador':
-  //       return <Route path="/lista-pedidos" />;
-  //     default:
-  //       return null;
-  //   }
-  // };
-
   return (
     <Router>
       <Header />
@@ -55,8 +26,7 @@ export const RoutesMain = () => {
 
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/newsletter" element={<Newsletter />} />
-        <Route path="/projeto/:id" element={<ProjetoView/>} />
-        {/* {listaPedidosRoutes()} */}
+        <Route path="/projeto/:id" element={<ProjetoView />} />
         <Route
           path="/perfil"
           element={

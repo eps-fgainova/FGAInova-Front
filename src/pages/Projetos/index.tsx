@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../service";
 import CardPopularPicks from "../../components/CardPopularPicks";
 import useDebounce from "../../utils/useDebounce";
+import BGImage from "../../assets/bannerProjetos.png";
 
 export default function Projetos() {
   const [projetos, setProjetos] = useState<IProjeto[]>([]);
@@ -84,7 +85,7 @@ export default function Projetos() {
       <Flex justifyContent={"center"} alignItems={"center"} position="relative">
         <Image
           width={"100%"}
-          src="../src/assets/bannerProjetos.png"
+          src={BGImage}
           alt="Projetos"
         />
         <Heading color={"white"} position={"absolute"} fontSize={"48px"}>
