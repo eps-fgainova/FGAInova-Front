@@ -7,7 +7,7 @@ node_modules
 .pnp.js
 
 # testing
-/coverage
+/coverage/lcov-report
 /cypress/screenshots
 
 # production
@@ -49,3 +49,5 @@ frontend/.DS_Store
 *.njsproj
 *.sln
 *.sw?
+.nyc_output/out.json
+.nyc_output/out.json
