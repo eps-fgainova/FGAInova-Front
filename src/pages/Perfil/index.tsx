@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Box,
   Heading,
-  Link,
   Image,
   Text,
   Divider,
@@ -18,10 +17,13 @@ import {
   InputRightElement,
   useToast,
   SimpleGrid,
+  Flex,
 } from "@chakra-ui/react";
-import {api, apiAuth} from "../../service";
+import { api, apiAuth } from "../../service";
 import CardPopularPicks from "../../components/CardPopularPicks";
 import { IProjeto } from "../../Interface/Projeto";
+import FileUploadButton from "../../components/FileUploadButton ";
+import { FaCheck } from "react-icons/fa";
 
 interface BlogAuthorProps {
   date: Date;
@@ -51,6 +53,8 @@ const Perfil = () => {
 
   const [show, setShow] = React.useState(false);
   const [projetos, setProjetos] = useState<IProjeto[]>([]);
+  const [imagemPerfilFile, setImagemPerfilFile] = useState<File | null>(null);
+  const [loadingApi, setloadingApi] = useState(false)
   const handleClick = () => setShow(!show);
   const toast = useToast();
 
@@ -58,29 +62,33 @@ const Perfil = () => {
     nome: "",
     senha: "",
     email: "",
+    imagemPerfilUrl: "",
   });
 
-  useEffect(() => {
+  const fetchData = async () => {
     if (data._id && token) {
       // Verifique se `data._id` e `token` estão disponíveis
-      apiAuth
-        .get(`/cliente/${data._id}`, {
+      try {
+        const res = await apiAuth.get(`/cliente/${data._id}`, {
           headers: {
             authorization: `Bearer ${token}`,
           },
-        })
-        .then((res) => {
-          const { nome, email, senha } = res.data;
-          setFormData({
-            nome: nome || "",
-            senha: senha || "",
-            email: email || "",
-          });
-        })
-        .catch((err) => {
-          console.error("Erro ao buscar dados do cliente:", err);
         });
+        const { nome, email, senha, imagemPerfilUrl } = res.data;
+        setFormData({
+          nome: nome || "",
+          senha: senha || "",
+          email: email || "",
+          imagemPerfilUrl: imagemPerfilUrl || "",
+        });
+      } catch (err) {
+        console.error("Erro ao buscar dados do cliente:", err);
+      }
     }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, [data._id, token]); // Adicione `data._id` e `token` como dependências do useEffect
 
   const fetchProjetos = async () => {
@@ -112,17 +120,41 @@ const Perfil = () => {
     }));
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files.length > 0) {
+      if (name === "imagemPerfilUrl") {
+        console.log(files[0]);
+        setImagemPerfilFile(files[0]);
+      }
+    }
+  };
+
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+
+    const formDataPut = new FormData();
+
+    formDataPut.append("nome", formData.nome);
+    formDataPut.append("email", formData.email);
+    formDataPut.append("senha", formData.senha);
+    if (imagemPerfilFile) {
+      formDataPut.append("imagemPerfil", imagemPerfilFile);
+    }
+
     try {
+      setloadingApi(true)
       const response = await apiAuth
-        .put(`/cliente/${emailToPut}`, formData, {
+        .put(`/cliente/${emailToPut}`, formDataPut, {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         })
         .then((res) => {
+          setloadingApi(false)
           return res;
+
         });
 
       if (response.status === 200) {
@@ -134,6 +166,8 @@ const Perfil = () => {
           isClosable: true,
           position: "bottom-left",
         });
+
+        fetchData();
       }
     } catch (error) {
       toast({
@@ -170,16 +204,19 @@ const Perfil = () => {
             marginLeft={{ base: "0", sm: "5%" }}
             marginTop="5%"
           >
-            <Link textDecoration="none" _hover={{ textDecoration: "none" }}>
-              <Image
-                borderRadius="lg"
-                src={
-                  "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&"
-                }
-                alt="some good alt text"
-                objectFit="contain"
-              />
-            </Link>
+            <Image
+              borderRadius="lg"
+              width="488.312px"
+              height="326.141"
+              boxShadow={"2xl"}
+              src={
+                formData.imagemPerfilUrl
+                  ? formData.imagemPerfilUrl
+                  : "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&"
+              }
+              alt="some good alt text"
+              objectFit="cover"
+            />
           </Box>
           <Box zIndex="1" width="100%" position="absolute" height="100%">
             <Box
@@ -241,6 +278,31 @@ const Perfil = () => {
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
+                <FormControl
+                  id="senha"
+                  display={"flex"}
+                  justifyContent={"space-evenly"}
+                >
+                  <FileUploadButton
+                    alignSelf={"flex-start"}
+                    FormLabelName="Selecione seu Avatar"
+                    name="imagemPerfilUrl"
+                    onFileChange={handleFileChange}
+                    accept="image/*"
+                  />
+                  {imagemPerfilFile?.name && (
+                    <Flex
+                      flexDirection={"column"}
+                      alignItems={"center"}
+                      gap={".3rem"}
+                      width={"80px"}
+                      maxWidth={"80px"}                      
+                    >
+                      <FaCheck color="green" />
+                      <Text maxWidth={"80px"} noOfLines={1} fontSize={"x-small"}>{imagemPerfilFile?.name}</Text>
+                    </Flex>
+                  )}
+                </FormControl>
                 <Button
                   type="submit"
                   w={"100%"}
@@ -252,6 +314,7 @@ const Perfil = () => {
                   _hover={{
                     bg: "teal.300",
                   }}
+                  isLoading={loadingApi}
                 >
                   Enviar
                 </Button>
@@ -270,6 +333,7 @@ const Perfil = () => {
             key={projeto._id}
             titulo={projeto.titulo}
             descricaoCurta={projeto.descricaoCurta}
+            banner={projeto.bannerUrl}
             tags={projeto.tags}
             _id={projeto._id}
             pessoaId={projeto.pessoaId}
@@ -277,7 +341,7 @@ const Perfil = () => {
           />
         ))}
       </SimpleGrid>
-      <Button
+      {/* <Button
         isLoading={false}
         w={"100%"}
         display={{ base: "none", md: "inline-flex" }}
@@ -290,7 +354,7 @@ const Perfil = () => {
         }}
       >
         Carregar Mais
-      </Button>
+      </Button> */}
     </Container>
   );
 };

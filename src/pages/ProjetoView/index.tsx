@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { IProjeto } from "../../Interface/Projeto";
 import { api } from "../../service";
+import BGImage from "../../assets/bannerProjetos.png";
 import {
   FaFacebook,
   FaTwitter,
@@ -80,7 +81,7 @@ const ProjetoView = () => {
             src={
               projeto.bannerUrl
                 ? projeto.bannerUrl
-                : "../src/assets/bannerProjetos.png"
+                : BGImage
             }
             alt="Projetos"
             objectFit="cover"
