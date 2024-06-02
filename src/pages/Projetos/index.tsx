@@ -84,7 +84,11 @@ export default function Projetos() {
   return (
     <>
       <Flex justifyContent={"center"} alignItems={"center"} position="relative">
-        <Image width={"100%"} src={BGImage} alt="Projetos" />
+        <Image
+          width={"100%"}
+          src={BGImage}
+          alt="Projetos"
+        />
         <Heading color={"white"} position={"absolute"} fontSize={"48px"}>
           Projetos
         </Heading>
