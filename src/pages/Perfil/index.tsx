@@ -19,7 +19,7 @@ import {
   useToast,
   SimpleGrid,
 } from "@chakra-ui/react";
-import api from "../../service";
+import {api, apiAuth} from "../../service";
 import CardPopularPicks from "../../components/CardPopularPicks";
 import { IProjeto } from "../../Interface/Projeto";
 
@@ -63,7 +63,7 @@ const Perfil = () => {
   useEffect(() => {
     if (data._id && token) {
       // Verifique se `data._id` e `token` estão disponíveis
-      api
+      apiAuth
         .get(`/cliente/${data._id}`, {
           headers: {
             authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ const Perfil = () => {
   const fetchProjetos = async () => {
     // Faça a solicitação à API para buscar os projetos
     api
-      .get<IProjeto[]>("/projeto", {
+      .get<IProjeto[]>("/projetos/usuario", {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -115,7 +115,7 @@ const Perfil = () => {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      const response = await api
+      const response = await apiAuth
         .put(`/cliente/${emailToPut}`, formData, {
           headers: {
             authorization: `Bearer ${token}`,

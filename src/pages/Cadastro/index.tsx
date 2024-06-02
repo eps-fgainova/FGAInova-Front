@@ -15,7 +15,7 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
-import api from "../../service";
+import { apiAuth } from "../../service";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 
@@ -70,7 +70,7 @@ export default function Cadastro() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await api
+      await apiAuth
         .post("/cliente", formData)
         .then(() => {
           toast({

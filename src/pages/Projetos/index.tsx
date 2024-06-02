@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IProjeto } from "../../Interface/Projeto";
 import { useEffect, useState } from "react";
-import api from "../../service";
+import { api } from "../../service";
 import CardPopularPicks from "../../components/CardPopularPicks";
 import useDebounce from "../../utils/useDebounce";
 

@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, {
-  useState,
-  useEffect,
-  ChangeEvent,
-  FormEvent,  
-} from "react";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ChakraProvider,
@@ -20,17 +15,17 @@ import {
   Container,
   Heading,
   Image,
-  useToast,  
+  useToast,
 } from "@chakra-ui/react";
 import {
   FaFacebook,
   FaTwitter,
   FaInstagram,
   FaLinkedin,
-  FaYoutube,  
+  FaYoutube,
   FaExternalLinkAlt,
 } from "react-icons/fa";
-import api from "../../service";
+import { api } from "../../service";
 import InputTag, { TagData } from "../../components/InputTag";
 import FileUploadButton from "../../components/FileUploadButton ";
 
@@ -109,7 +104,7 @@ const CreateProjectForm: React.FC = () => {
         instagram: "",
         linkedin: "",
         youtube: "",
-        site: "",	
+        site: "",
       });
       setLinkVideo("");
       setTags([]);
@@ -393,14 +388,14 @@ const CreateProjectForm: React.FC = () => {
               </InputGroup>
             </FormControl>
 
-            <FormControl borderWidth='1px' borderRadius='lg' padding={"1rem"}>
+            <FormControl borderWidth="1px" borderRadius="lg" padding={"1rem"}>
               <FileUploadButton
                 FormLabelName="Banner do Projeto"
                 name="banner"
                 onFileChange={handleFileChange}
                 accept="image/*"
                 multiple
-              />              
+              />
               {bannerFile ? (
                 <Box mt={2}>
                   <Image
@@ -436,14 +431,13 @@ const CreateProjectForm: React.FC = () => {
               ) : null}
             </FormControl>
 
-            
-            <FormControl  borderWidth='1px' borderRadius='lg' padding={"1rem"}>
+            <FormControl borderWidth="1px" borderRadius="lg" padding={"1rem"}>
               <FileUploadButton
                 FormLabelName="Logo do Projeto"
                 name="logo"
                 onFileChange={handleFileChange}
-                accept="image/*"                
-              />              
+                accept="image/*"
+              />
               {logoFile ? (
                 <Box mt={2}>
                   <Image
@@ -479,14 +473,14 @@ const CreateProjectForm: React.FC = () => {
               ) : null}
             </FormControl>
 
-            <FormControl borderWidth='1px' borderRadius='lg' padding={"1rem"}>
+            <FormControl borderWidth="1px" borderRadius="lg" padding={"1rem"}>
               <FileUploadButton
                 FormLabelName="Imagens do Projeto"
                 name="imagens"
                 onFileChange={handleFileChange}
                 accept="image/*"
                 multiple
-              />              
+              />
               {imagens.length > 0 && (
                 <Box mt={2} display="flex" flexDirection="row" gap="1rem">
                   {imagens.map((imagem, index) => (
