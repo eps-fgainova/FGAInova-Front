@@ -20,6 +20,7 @@ import { AxiosResponse } from "axios";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
   const { setUser, setIsAuthenticate, isAuthenticate } = useAuth();
@@ -52,7 +53,9 @@ export default function Login() {
     };
 
     try {
+      setLoading(true);
       const response = await apiAuth.post("/signin", data).then((res) => {
+        setLoading(false)
         return res;
       });
       if (response.status === 200) {
@@ -60,7 +63,7 @@ export default function Login() {
           "@user",
           JSON.stringify({
             ...response.data.pessoa,
-            funcao: "Cliente",
+            funcao: "Cliente",            
           })
         );
         sessionStorage.setItem("@token", JSON.stringify(response.data.token));
@@ -72,6 +75,7 @@ export default function Login() {
       }
     } catch (error) {
       const { response } = error as ErroRequest;
+      setLoading(false)
       toast({
         title: "Algo esta errado. 😥",
         description: response?.data.erro
@@ -154,6 +158,7 @@ export default function Login() {
                 bg: "teal.300",
                 boxShadow: "xl",
               }}
+              isLoading={loading}
             >
               Entrar
             </Button>

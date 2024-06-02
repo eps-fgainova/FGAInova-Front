@@ -15,17 +15,18 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   useToast,
-  Avatar,
 } from "@chakra-ui/react";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useRef } from "react";
 import { api } from "../../service";
 import { useLocation, useNavigate } from "react-router";
+import BGImage from "../../assets/bannerProjetos.png";
 
 interface ICardPopularPicks {
   titulo?: string;
   descricaoCurta?: string;
+  banner?: string;
   _id?: string;
   tags?: string[];
   pessoaId?: string;
@@ -35,6 +36,7 @@ interface ICardPopularPicks {
 export default function CardPopularPicks({
   titulo = "Titulo",
   descricaoCurta = "Descrição",
+  banner = BGImage,
   tags,
   _id,
   pessoaId,
@@ -143,14 +145,10 @@ export default function CardPopularPicks({
             mx={-6}
             mb={6}
             pos={"relative"}
-          >
-            {/* <Image
-            src={
-              'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-            }
-            layout={'fill'}
-          /> */}
-          </Box>
+            css={{
+              background: `url(${banner}) white no-repeat center center / cover`,
+            }}
+          ></Box>
           <Stack>
             <Text
               color={"green.500"}
@@ -162,11 +160,7 @@ export default function CardPopularPicks({
               gap={".5rem"}
             >
               {tags?.map((text, i) => (
-                <Tag
-                  key={i + "_" + text}
-                  colorScheme="teal"
-                  // className={styles.item_text}
-                >
+                <Tag key={i + "_" + text} colorScheme="teal">
                   {text}
                 </Tag>
               ))}
@@ -221,17 +215,17 @@ export default function CardPopularPicks({
               align={"center"}
               justifyContent={"space-between"}
             >
-              <Avatar
+              {/* <Avatar
                 src={"https://avatars0.githubusercontent.com/u/1164541?v=4"}
               />
               <Stack direction={"column"} spacing={0} fontSize={"sm"}>
                 <Text fontWeight={600}>Achim Rolle</Text>
                 <Text color={"gray.500"}>Feb 08, 2021 · 6min read</Text>
-              </Stack>
+              </Stack> */}
               <Button
                 // rightIcon={<FaRegTrashAlt />}
                 colorScheme="teal"
-                // width={"100%"}
+                width={"100%"}
                 onClick={() => {
                   navigate(`/projeto/${_id}`);
                 }}

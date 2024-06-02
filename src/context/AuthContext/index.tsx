@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 // Defina a interface AuthContextType
 interface User {
+  imagemPerfilUrl: string | undefined;
   _id: string | undefined;
   id?: string;
   name?: string;
@@ -44,6 +45,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     _id: undefined,
     id: undefined,
     name: undefined,
+    imagemPerfilUrl: undefined,
   });
   const [token, setToken] = useState<string | undefined>(undefined);
   const [preOrder, setPreOrder] = useState<unknown[]>([]);

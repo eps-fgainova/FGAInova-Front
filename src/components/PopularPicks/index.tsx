@@ -5,6 +5,8 @@ import {
   Container,
   HStack,
   Button,
+  Spinner,
+  Flex,
 } from "@chakra-ui/react";
 import CardPopularPicks from "../CardPopularPicks";
 import { Link as LinkRouter } from "react-router-dom";
@@ -14,12 +16,14 @@ import { IProjeto } from "../../Interface/Projeto";
 
 export default function PopularPicks() {
   const [projetos, setProjetos] = useState<IProjeto[]>([]);
+  const [loading, setloading] = useState(true);
 
   useEffect(() => {
     api
       .get<IProjeto[]>("/projetos/top3")
       .then((res) => {
         // Atualize o estado com os dados recebidos da API
+        setloading(false);
         setProjetos(res.data);
       })
       .catch((err) => {
@@ -53,16 +57,27 @@ export default function PopularPicks() {
           direction={{ base: "column", md: "row" }}
           spacing={{ base: 10, md: 4, lg: 10 }}
         >
-          {projetos.map((projeto) => (
-            <CardPopularPicks
-              key={projeto._id}
-              titulo={projeto.titulo}
-              descricaoCurta={projeto.descricaoCurta}
-              tags={projeto.tags}
-              _id={projeto._id}
-              pessoaId={projeto.pessoaId}
-            />
-          ))}
+          {loading ? (
+            <Flex
+              width={"full"}              
+              height={"300px"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Spinner color="teal" size="xl" />
+            </Flex>
+          ) : (
+            projetos.map((projeto) => (
+              <CardPopularPicks
+                key={projeto._id}
+                titulo={projeto.titulo}
+                descricaoCurta={projeto.descricaoCurta}
+                tags={projeto.tags}
+                _id={projeto._id}
+                pessoaId={projeto.pessoaId}
+              />
+            ))
+          )}
         </Stack>
       </Container>
     </Box>

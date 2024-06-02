@@ -7,6 +7,7 @@ import {
   SimpleGrid,
   Button,
   useColorModeValue,
+  Spinner,
 } from "@chakra-ui/react";
 import { IProjeto } from "../../Interface/Projeto";
 import { useEffect, useState } from "react";
@@ -83,11 +84,7 @@ export default function Projetos() {
   return (
     <>
       <Flex justifyContent={"center"} alignItems={"center"} position="relative">
-        <Image
-          width={"100%"}
-          src={BGImage}
-          alt="Projetos"
-        />
+        <Image width={"100%"} src={BGImage} alt="Projetos" />
         <Heading color={"white"} position={"absolute"} fontSize={"48px"}>
           Projetos
         </Heading>
@@ -129,18 +126,31 @@ export default function Projetos() {
             Buscar
           </Button>
         </Flex>
-        <SimpleGrid columns={[1, null, 2, 3]} spacing="40px">
-          {projetos.map((projeto) => (
-            <CardPopularPicks
-              key={projeto._id}
-              titulo={projeto.titulo}
-              descricaoCurta={projeto.descricaoCurta}
-              tags={projeto.tags}
-              _id={projeto._id}
-              pessoaId={projeto.pessoaId}
-            />
-          ))}
-        </SimpleGrid>
+        {isLoading ? (
+          <Flex
+            width={"full"}
+            height={"300px"}            
+            justifyContent={"center"}
+            alignItems={"center"}
+            position={"initial"}
+          >
+            <Spinner color="teal" size="xl" />
+          </Flex>
+        ) : (
+          <SimpleGrid columns={[1, null, 2, 3]} spacing="40px">
+            {projetos.map((projeto) => (
+              <CardPopularPicks
+                key={projeto._id}
+                titulo={projeto.titulo}
+                descricaoCurta={projeto.descricaoCurta}
+                banner={projeto.bannerUrl}
+                tags={projeto.tags}
+                _id={projeto._id}
+                pessoaId={projeto.pessoaId}
+              />
+            ))}
+          </SimpleGrid>
+        )}
       </Container>
     </>
   );
