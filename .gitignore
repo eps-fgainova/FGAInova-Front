@@ -51,4 +51,6 @@ frontend/.DS_Store
 *.sln
 *.sw?
 .nyc_output/out.json
-.nyc_output/out.json
+coverage/clover.xml
+coverage/coverage-final.json
+coverage/coverage-summary.json

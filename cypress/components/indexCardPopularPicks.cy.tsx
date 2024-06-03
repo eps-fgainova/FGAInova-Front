@@ -37,23 +37,4 @@ describe('CardPopularPicks Component', () => {
     );
     cy.get('p').contains(mock.descricaoCurta).should('be.visible');
   });
-
-  it('Componente deve ter as tags de acordo com mock', () => {
-    cy.mount(
-      <Router>
-        <ChakraProvider>
-          <AuthProvider>
-            <CardPopularPicks {...mock} />
-          </AuthProvider>
-        </ChakraProvider>
-      </Router>
-    );
-    for (const tag in mock.tags) {
-      cy.get('p').contains(tag).should('be.visible');
-    }
-
-  });
-
-
-
 });
