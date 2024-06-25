@@ -24,7 +24,11 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
+docker-compose.yml
+Dockerfile
+Makefile
+.dockerignore
+vercel.json
 
 # Logs
 frontend/logs
