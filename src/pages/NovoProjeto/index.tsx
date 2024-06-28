@@ -16,6 +16,16 @@ import {
   Heading,
   Image,
   useToast,
+  Flex,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalHeader,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
+  Text,
 } from "@chakra-ui/react";
 import {
   FaFacebook,
@@ -28,6 +38,7 @@ import {
 import { api } from "../../service";
 import InputTag, { TagData } from "../../components/InputTag";
 import FileUploadButton from "../../components/FileUploadButton ";
+import axios from "axios";
 
 interface IParams {
   id?: string;
@@ -41,6 +52,7 @@ const CreateProjectForm: React.FC = () => {
   const [titulo, setTitulo] = useState<string>("");
   const [descricao, setDescricao] = useState<string>("");
   const [descricaoCurta, setDescricaoCurta] = useState<string>("");
+  const [descricaoCurtaPitch, setDescricaoCurtaPitch] = useState<string>("");
   const [linksRedesSociais, setLinksRedesSociais] = useState({
     facebook: "",
     twitter: "",
@@ -61,7 +73,13 @@ const CreateProjectForm: React.FC = () => {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [removedImages, setRemovedImages] = useState<string[]>([]);
   const token = JSON.parse(sessionStorage.getItem("@token") || "");
+  const [loading, setloading] = useState(false);
+  const [loadingProject, setLoadingProject] = useState(false);
   const navigate = useNavigate();
+
+  // Modal
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const finalRef = React.useRef(null);
 
   useEffect(() => {
     if (id) {
@@ -142,6 +160,31 @@ const CreateProjectForm: React.FC = () => {
     }
   };
 
+  const handlePitchApi = async (titulo: string, descricao: string) => {
+    if (descricaoCurtaPitch.length > 0) {
+      onOpen();
+      return;
+    }
+    setloading(true);
+    try {
+      await axios
+        .post("https://api-pitchit.onrender.com/pitch/create", {
+          userId: "fgaInova",
+          projectName: titulo,
+          description: descricao,
+        })
+        .then((response) => {          
+          setDescricaoCurtaPitch(response.data.pitchText);
+          setloading(false);
+          onOpen();
+        });
+    } catch (error) {
+      console.error("Erro ao enviar pitch para a API:", error);
+      onClose();
+      setloading(false);
+    }
+  };
+
   const handleRemoveImage = (type: string, index?: number) => {
     if (type === "banner") {
       setBannerFile(null);
@@ -191,6 +234,7 @@ const CreateProjectForm: React.FC = () => {
       formData.append(`removedImages[${index}]`, imageUrl);
     });
 
+    setLoadingProject(true);
     try {
       if (id) {
         await api
@@ -201,6 +245,7 @@ const CreateProjectForm: React.FC = () => {
             },
           })
           .then(() => {
+            setLoadingProject(false);
             toast({
               title: "Projeto Atualizado com Sucesso! 😁",
               description: "Atualizamos seu projeto. 😉",
@@ -219,6 +264,7 @@ const CreateProjectForm: React.FC = () => {
             },
           })
           .then(() => {
+            setLoadingProject(false);
             toast({
               title: "Projeto CRIADO com Sucesso! ✅❤️",
               description: "Criamos seu novo projeto. 😉",
@@ -238,6 +284,7 @@ const CreateProjectForm: React.FC = () => {
           });
       }
     } catch (error) {
+      setLoadingProject(false);
       console.error("Erro ao enviar projeto:", error);
       toast({
         title: "Algo deu errado ao criar seu projeto! 😥",
@@ -248,6 +295,16 @@ const CreateProjectForm: React.FC = () => {
         position: "bottom-left",
       });
     }
+  };
+
+  const newPitch = () => {
+    setDescricaoCurtaPitch("");
+    onClose();
+  };
+
+  const setNewPitch = () => {
+    setDescricaoCurta(descricaoCurtaPitch);
+    onClose();
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
@@ -280,7 +337,9 @@ const CreateProjectForm: React.FC = () => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Descrição</FormLabel>
+              <Flex>
+                <FormLabel>Descrição</FormLabel>
+              </Flex>
               <Textarea
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
@@ -289,7 +348,29 @@ const CreateProjectForm: React.FC = () => {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Descrição Curta</FormLabel>
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+                mb="1rem"
+              >
+                <FormLabel>Descrição Curta</FormLabel>
+                <Button
+                  as={"a"}
+                  display={{ base: "none", md: "inline-flex" }}
+                  fontSize={"sm"}
+                  fontWeight={600}
+                  color={"white"}
+                  bg={"teal.400"}
+                  href={"#"}
+                  _hover={{
+                    bg: "teal.300",
+                  }}
+                  onClick={() => handlePitchApi(titulo, descricaoCurta)}
+                  isLoading={loading}
+                >
+                  Gerar Pitch ✨
+                </Button>
+              </Flex>
               <Textarea
                 value={descricaoCurta}
                 onChange={(e) => setDescricaoCurta(e.target.value)}
@@ -309,7 +390,7 @@ const CreateProjectForm: React.FC = () => {
             <FormControl>
               <FormLabel>Tags</FormLabel>
               <InputTag value={tags} onChange={handleTagChange} />
-              <p>Tags atuais: {tags.map((tag) => tag.text).join(", ")}</p>
+              {/* <p>Tags atuais: {tags.map((tag) => tag.text).join(", ")}</p> */}
             </FormControl>
 
             <FormControl>
@@ -551,12 +632,54 @@ const CreateProjectForm: React.FC = () => {
               size="lg"
               mt={4}
               w={"full"}
+              isLoading={loadingProject}
             >
               {id ? "Salvar Alterações" : "Enviar"}
             </Button>
           </VStack>
         </Box>
       </ChakraProvider>
+
+      <Modal
+        finalFocusRef={finalRef}
+        size="xl"
+        isCentered
+        onClose={onClose}
+        isOpen={isOpen}
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent minWidth="70%" maxWidth={"1300px"}>
+          <ModalHeader>Pitch ✨</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {/* <Lorem count={2} /> */}
+            <Text textAlign={"justify"} mb={4} whiteSpace={"pre-line"}>
+              {descricaoCurtaPitch}
+            </Text>
+          </ModalBody>
+          <ModalFooter display="flex" justifyContent="space-between">
+            <Button
+              fontWeight={600}
+              color={"white"}
+              bg={"teal.400"}
+              mr={3}
+              onClick={newPitch}
+            >
+              Tentar Novamente
+            </Button>
+            <Button
+              fontWeight={600}
+              color={"white"}
+              bg={"teal.400"}
+              mr={3}
+              onClick={setNewPitch}
+            >
+              Substituir a Descrição
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };
