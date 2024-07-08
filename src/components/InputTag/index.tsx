@@ -3,7 +3,9 @@ import { Box, Flex, Tag, TagCloseButton } from "@chakra-ui/react";
 import styles from "./Input.module.css";
 
 export interface TagData {
+  value?: string | Blob;
   text: string;
+  color?: string;
 }
 
 const dataTemp: TagData[] = [{ text: "hello1" }, { text: "hello2" }];
@@ -23,7 +25,9 @@ export default function InputTag(props: {
 
     const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      const newText = (event.target as HTMLInputElement).value.trim().replace(",", "");
+      const newText = (event.target as HTMLInputElement).value
+        .trim()
+        .replace(",", "");
       switch (event.key) {
         case ",":
           if (newText.length > 0) {
@@ -62,9 +66,16 @@ export default function InputTag(props: {
       }
     };
 
-    window.addEventListener("keyup", handleKeyUp as unknown as (event: KeyboardEvent) => void);
+    window.addEventListener(
+      "keyup",
+      handleKeyUp as unknown as (event: KeyboardEvent) => void
+    );
 
-    return () => window.removeEventListener("keyup", handleKeyUp as unknown as (event: KeyboardEvent) => void);
+    return () =>
+      window.removeEventListener(
+        "keyup",
+        handleKeyUp as unknown as (event: KeyboardEvent) => void
+      );
   }, [sizeInput, dataInput]);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {

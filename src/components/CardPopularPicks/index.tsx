@@ -159,7 +159,7 @@ export default function CardPopularPicks({
               display={"flex"}
               gap={".5rem"}
             >
-              {tags?.map((text, i) => (
+              {tags?.slice(0, 2).map((text, i) => (
                 <Tag key={i + "_" + text} colorScheme="teal">
                   {text}
                 </Tag>

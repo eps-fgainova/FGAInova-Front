@@ -1,6 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  FormEvent,
+  useRef,
+  useMemo,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import JoditEditor from "jodit-react";
 import {
   ChakraProvider,
   Box,
@@ -27,6 +36,7 @@ import {
   ModalCloseButton,
   Text,
 } from "@chakra-ui/react";
+import { Select as SelectTag } from "chakra-react-select";
 import {
   FaFacebook,
   FaTwitter,
@@ -39,6 +49,7 @@ import { api } from "../../service";
 import InputTag, { TagData } from "../../components/InputTag";
 import FileUploadButton from "../../components/FileUploadButton ";
 import axios from "axios";
+import { nl2br } from "../../utils/nl2br";
 
 interface IParams {
   id?: string;
@@ -102,11 +113,12 @@ const CreateProjectForm: React.FC = () => {
             imagens,
           } = response.data;
           setTitulo(titulo);
-          setDescricao(descricao);
+          setDescricao(nl2br(descricao));
           setDescricaoCurta(descricaoCurta);
           setLinksRedesSociais(linksRedesSociais);
           setLinkVideo(linkVideo);
-          setTags(tags.map((tag: string) => ({ id: tag, text: tag })));
+          // setTags(tags.map((tag: string) => ({ id: tag, text: tag })));
+          setTags(findCategories(tags, projectCategories));
           setExistingBannerUrl(bannerUrl);
           setExistingLogoUrl(logoUrl);
           setExistingImages(imagens);
@@ -142,6 +154,7 @@ const CreateProjectForm: React.FC = () => {
   };
 
   const handleTagChange = (newTags: TagData[]) => {
+    console.log(newTags);
     setTags(newTags);
   };
 
@@ -173,7 +186,7 @@ const CreateProjectForm: React.FC = () => {
           projectName: titulo,
           description: descricao,
         })
-        .then((response) => {          
+        .then((response) => {
           setDescricaoCurtaPitch(response.data.pitchText);
           setloading(false);
           onOpen();
@@ -210,7 +223,7 @@ const CreateProjectForm: React.FC = () => {
     formData.append("descricaoCurta", descricaoCurta);
     formData.append("linkVideo", linkVideo);
     tags.forEach((tag, index) => {
-      formData.append(`tags[${index}]`, tag.text);
+      formData.append(`tags[${index}]`, tag?.value ?? "");
     });
     formData.append("linksRedesSociais[facebook]", linksRedesSociais.facebook);
     formData.append("linksRedesSociais[twitter]", linksRedesSociais.twitter);
@@ -313,6 +326,88 @@ const CreateProjectForm: React.FC = () => {
     }
   };
 
+  // Rich Text Atributes
+  const editor = useRef(null);
+
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      spellcheck: true,
+      autofocus: true,
+      language: "pt_br",
+      showCharsCounter: false,
+      showWordsCounter: false,
+      showXPathInStatusbar: false,
+    }),
+    []
+  );
+
+  const projectCategories = [
+    { value: "tecnologia", label: "Tecnologia", color: "#007BFF" }, // Azul vibrante
+    { value: "educacao", label: "Educação", color: "#6F42C1" }, // Roxo
+    { value: "saude", label: "Saúde", color: "#D6336C" }, // Rosa avermelhado
+    { value: "energia", label: "Energia", color: "#FD7E14" }, // Laranja
+    { value: "meio-ambiente", label: "Meio Ambiente", color: "#28A745" }, // Verde
+    { value: "financas", label: "Finanças", color: "#FFC107" }, // Amarelo
+    { value: "mobilidade", label: "Mobilidade", color: "#6610F2" }, // Roxo mais escuro
+    { value: "agritech", label: "AgriTech", color: "#20C997" }, // Verde claro
+    { value: "biotecnologia", label: "Biotecnologia", color: "#E83E8C" }, // Rosa forte
+    {
+      value: "inteligencia-artificial",
+      label: "Inteligência Artificial",
+      color: "#6C757D",
+    }, // Cinza médio
+    {
+      value: "empreendedorismo-social",
+      label: "Empreendedorismo Social",
+      color: "#17A2B8",
+    }, // Azul claro
+    { value: "design", label: "Design", color: "#E0A800" }, // Amarelo ouro
+    { value: "engenharia", label: "Engenharia", color: "#DC3545" }, // Vermelho
+    { value: "biomedicina", label: "Biomedicina", color: "#343A40" }, // Cinza escuro
+    { value: "ciencia-dados", label: "Ciência de Dados", color: "#00B8D9" }, // Ciano
+  ];
+
+  function findCategories(categoriesArray: any[], projectCategories: any[]) {
+    return categoriesArray.map((category) => {
+      return projectCategories.find((pc) => pc.value === category);
+    });
+  }
+  const mappedColourOptions = projectCategories.map((option) => ({
+    value: option.value,
+    label: option.label,
+    color: option.color,
+  }));
+
+  const chakraStyles = {
+    multiValue: (provided: any, state: { data: { color: any } }) => {
+      const color = state.data.color;
+      return {
+        ...provided,
+        backgroundColor: color,
+        color: "white",
+      };
+    },
+    multiValueLabel: (provided: any, state: { data: { color: any } }) => {
+      const color = state.data.color;
+      return {
+        ...provided,
+        color: "white",
+      };
+    },
+    multiValueRemove: (provided: any, state: { data: { color: any } }) => {
+      const color = state.data.color;
+      return {
+        ...provided,
+        color: "white",
+        ":hover": {
+          backgroundColor: color,
+          color: "white",
+        },
+      };
+    },
+  };
+
   return (
     <Container maxW={"7xl"} p="12">
       <ChakraProvider>
@@ -340,11 +435,19 @@ const CreateProjectForm: React.FC = () => {
               <Flex>
                 <FormLabel>Descrição</FormLabel>
               </Flex>
-              <Textarea
+              {/* <Textarea
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Descrição detalhada do projeto"
                 height={"20rem"}
+              /> */}
+              <JoditEditor
+                ref={editor}
+                value={descricao}
+                config={config}
+                // tabIndex={1} // tabIndex of textarea
+                onBlur={(newContent) => setDescricao(newContent)} // preferred to use only this option to update the content for performance reasons
+                onChange={(newContent) => setDescricao(newContent)}
               />
             </FormControl>
             <FormControl>
@@ -389,7 +492,18 @@ const CreateProjectForm: React.FC = () => {
 
             <FormControl>
               <FormLabel>Tags</FormLabel>
-              <InputTag value={tags} onChange={handleTagChange} />
+              {/* <InputTag value={tags} onChange={handleTagChange} /> */}
+              <SelectTag
+                isMulti
+                name="colors"
+                options={mappedColourOptions}
+                placeholder="Tag para categorizar seu projeto..."
+                closeMenuOnSelect={false}
+                value={tags}
+                onChange={(e) => handleTagChange(e as unknown as TagData[])}
+                size="sm"
+                chakraStyles={chakraStyles}
+              />
               {/* <p>Tags atuais: {tags.map((tag) => tag.text).join(", ")}</p> */}
             </FormControl>
 

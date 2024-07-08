@@ -78,11 +78,7 @@ const ProjetoView = () => {
         <AspectRatio ratio={4 / 3} height="309">
           <Image
             width={"100%"}
-            src={
-              projeto.bannerUrl
-                ? projeto.bannerUrl
-                : BGImage
-            }
+            src={projeto.bannerUrl ? projeto.bannerUrl : BGImage}
             alt="Projetos"
             objectFit="cover"
           />
@@ -126,9 +122,10 @@ const ProjetoView = () => {
         <Heading as="h6" mb={4}>
           Sobre
         </Heading>
-        <Text textAlign={"justify"} mb={4} whiteSpace={"pre-line"}>
+        {/* <Text textAlign={"justify"} mb={4} whiteSpace={"pre-line"}>
           {projeto.descricao}
-        </Text>
+        </Text> */}
+        <div dangerouslySetInnerHTML={{ __html: projeto.descricao }} />        
 
         {projeto.imagens.length > 0 && (
           <>
