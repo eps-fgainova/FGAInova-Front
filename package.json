@@ -71,5 +71,9 @@
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-plugin-istanbul": "^6.0.2"
+  },
+  "engines": {
+    "node": "20.10.0",
+    "npm": "10.2.3"
   }
 }
