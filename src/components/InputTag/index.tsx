@@ -5,7 +5,7 @@ import styles from "./Input.module.css";
 export interface TagData {
   value?: string | Blob;
   text: string;
-  color?: string;
+  color?: string | unknown;
 }
 
 const dataTemp: TagData[] = [{ text: "hello1" }, { text: "hello2" }];

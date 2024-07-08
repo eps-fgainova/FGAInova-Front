@@ -36,7 +36,7 @@ import {
   ModalCloseButton,
   Text,
 } from "@chakra-ui/react";
-import { Select as SelectTag } from "chakra-react-select";
+import { MultiValue, Select as SelectTag } from "chakra-react-select";
 import {
   FaFacebook,
   FaTwitter,
@@ -46,7 +46,7 @@ import {
   FaExternalLinkAlt,
 } from "react-icons/fa";
 import { api } from "../../service";
-import InputTag, { TagData } from "../../components/InputTag";
+import { TagData } from "../../components/InputTag";
 import FileUploadButton from "../../components/FileUploadButton ";
 import axios from "axios";
 import { nl2br } from "../../utils/nl2br";
@@ -388,8 +388,7 @@ const CreateProjectForm: React.FC = () => {
         color: "white",
       };
     },
-    multiValueLabel: (provided: any, state: { data: { color: any } }) => {
-      const color = state.data.color;
+    multiValueLabel: (provided: any) => {
       return {
         ...provided,
         color: "white",
@@ -492,14 +491,13 @@ const CreateProjectForm: React.FC = () => {
 
             <FormControl>
               <FormLabel>Tags</FormLabel>
-              {/* <InputTag value={tags} onChange={handleTagChange} /> */}
               <SelectTag
                 isMulti
                 name="colors"
                 options={mappedColourOptions}
                 placeholder="Tag para categorizar seu projeto..."
                 closeMenuOnSelect={false}
-                value={tags}
+                value={tags as MultiValue<{ color: any; }> | undefined}
                 onChange={(e) => handleTagChange(e as unknown as TagData[])}
                 size="sm"
                 chakraStyles={chakraStyles}
