@@ -11,7 +11,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import { Select as SelectTag } from "chakra-react-select";
+import { MultiValue, Select as SelectTag } from "chakra-react-select";
 import { IProjeto } from "../../Interface/Projeto";
 import { useEffect, useState } from "react";
 import { api } from "../../service";
@@ -142,9 +142,8 @@ export default function Projetos() {
         color: "white",
       };
     },
-    multiValueLabel: (provided: any, state: { data: { color: any } }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const color = state.data.color;
+    multiValueLabel: (provided: any) => {      
+      
       return {
         ...provided,
         color: "white",
@@ -224,7 +223,7 @@ export default function Projetos() {
             options={mappedColourOptions}
             placeholder="Tag para categorizar seu projeto..."
             closeMenuOnSelect={false}
-            value={tags}
+            value={tags as MultiValue<{ color: any; }> | undefined}
             onChange={(e) => handleTagChange(e as unknown as TagData[])}
             size="sm"
             chakraStyles={chakraStyles}
