@@ -198,6 +198,40 @@ const CreateProjectForm: React.FC = () => {
     }
   };
 
+  const handlePitchApiElevador = async (titulo: string) => {
+    if (descricaoCurtaPitch.length > 0) {
+      onOpen();
+      return;
+    }
+    setloading(true);
+    try {
+      await axios
+        .post(
+          "https://api.openai.com/v1/completions",
+          {
+            model: "gpt-3.5-turbo-instruct",
+            prompt: `Crie um elevator pitch sobre: ${titulo}`,
+            max_tokens: 2048,
+            temperature: 0.5,
+          },
+          {
+            headers: {
+              Authorization: `Bearer sk-proj-PcvCdJpmcEwwxGmfywcIT3BlbkFJuf2tsS559ySJbiMlfXXg`, // Substitua yourToken pelo seu token real
+            },
+          }
+        )
+        .then((response) => {
+          setDescricaoCurtaPitch(response.data.choices[0].text);
+          setloading(false);
+          onOpen();
+        });
+    } catch (error) {
+      console.error("Erro ao enviar pitch para a API:", error);
+      onClose();
+      setloading(false);
+    }
+  };
+
   const handleRemoveImage = (type: string, index?: number) => {
     if (type === "banner") {
       setBannerFile(null);
@@ -456,22 +490,40 @@ const CreateProjectForm: React.FC = () => {
                 mb="1rem"
               >
                 <FormLabel>Descrição Curta</FormLabel>
-                <Button
-                  as={"a"}
-                  display={{ base: "none", md: "inline-flex" }}
-                  fontSize={"sm"}
-                  fontWeight={600}
-                  color={"white"}
-                  bg={"teal.400"}
-                  href={"#"}
-                  _hover={{
-                    bg: "teal.300",
-                  }}
-                  onClick={() => handlePitchApi(titulo, descricaoCurta)}
-                  isLoading={loading}
-                >
-                  Gerar Pitch ✨
-                </Button>
+                <Flex gap="1rem">
+                  <Button
+                    as={"a"}
+                    display={{ base: "none", md: "inline-flex" }}
+                    fontSize={"sm"}
+                    fontWeight={600}
+                    color={"white"}
+                    bg={"teal.400"}
+                    href={"#"}
+                    _hover={{
+                      bg: "teal.300",
+                    }}
+                    onClick={() => handlePitchApi(titulo, descricaoCurta)}
+                    isLoading={loading}
+                  >
+                    Gerar Pitch ✨
+                  </Button>
+                  <Button
+                    as={"a"}
+                    display={{ base: "none", md: "inline-flex" }}
+                    fontSize={"sm"}
+                    fontWeight={600}
+                    color={"white"}
+                    bg={"teal.400"}
+                    href={"#"}
+                    _hover={{
+                      bg: "teal.300",
+                    }}
+                    onClick={() => handlePitchApiElevador(titulo)}
+                    isLoading={loading}
+                  >
+                    Elevator Pitch 🛗
+                  </Button>
+                </Flex>
               </Flex>
               <Textarea
                 value={descricaoCurta}
@@ -497,7 +549,7 @@ const CreateProjectForm: React.FC = () => {
                 options={mappedColourOptions}
                 placeholder="Tag para categorizar seu projeto..."
                 closeMenuOnSelect={false}
-                value={tags as MultiValue<{ color: any; }> | undefined}
+                value={tags as MultiValue<{ color: any }> | undefined}
                 onChange={(e) => handleTagChange(e as unknown as TagData[])}
                 size="sm"
                 chakraStyles={chakraStyles}
